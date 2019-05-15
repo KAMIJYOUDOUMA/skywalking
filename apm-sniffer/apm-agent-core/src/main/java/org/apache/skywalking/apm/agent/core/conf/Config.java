@@ -62,6 +62,8 @@ public class Config {
          */
         public static String IGNORE_SUFFIX = ".jpg,.jpeg,.js,.css,.png,.bmp,.gif,.ico,.mp3,.mp4,.html,.svg";
 
+        public static String IGNORE_PREFIX = "/eureka";
+
         /**
          * The max number of spans in a single segment. Through this config item, skywalking keep your application
          * memory cost estimated.

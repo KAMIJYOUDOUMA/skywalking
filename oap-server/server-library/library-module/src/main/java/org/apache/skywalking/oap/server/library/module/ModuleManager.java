@@ -62,7 +62,7 @@ public class ModuleManager implements ModuleDefineHolder {
 
         BootstrapFlow bootstrapFlow = new BootstrapFlow(loadedModules);
 
-        bootstrapFlow.start(this);
+         bootstrapFlow.start(this);
         bootstrapFlow.notifyAfterCompleted();
     }
 

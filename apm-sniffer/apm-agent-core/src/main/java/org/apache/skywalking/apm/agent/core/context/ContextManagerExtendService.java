@@ -27,26 +27,33 @@ import org.apache.skywalking.apm.agent.core.sampling.SamplingService;
  */
 @DefaultImplementor
 public class ContextManagerExtendService implements BootService {
-    @Override public void prepare() {
+    @Override
+    public void prepare() {
 
     }
 
-    @Override public void boot() {
+    @Override
+    public void boot() {
 
     }
 
-    @Override public void onComplete() {
+    @Override
+    public void onComplete() {
 
     }
 
-    @Override public void shutdown() {
+    @Override
+    public void shutdown() {
 
     }
 
     public AbstractTracerContext createTraceContext(String operationName, boolean forceSampling) {
         AbstractTracerContext context;
         int suffixIdx = operationName.lastIndexOf(".");
+        int prefixIdx = operationName.indexOf('/', 1);
         if (suffixIdx > -1 && Config.Agent.IGNORE_SUFFIX.contains(operationName.substring(suffixIdx))) {
+            context = new IgnoredTracerContext();
+        } else if (Config.Agent.IGNORE_PREFIX.equals(operationName.substring(0,prefixIdx))) {
             context = new IgnoredTracerContext();
         } else {
             SamplingService samplingService = ServiceManager.INSTANCE.findService(SamplingService.class);

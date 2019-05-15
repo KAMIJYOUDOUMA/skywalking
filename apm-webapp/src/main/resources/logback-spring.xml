@@ -17,10 +17,55 @@
   ~
   -->
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
-    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+    <property name="PROJECT_NAME" value="apm-webapp"/>
+    <property name="LOG_HOME" value="/data/logs"/>
+    <property name="EVENT_QUEUE_SIZE" value="256"/>
+    <property name="DISCARDING_THRESHOLD" value="64"/>
+    <property name="MAX_HISTORY" value="30"/>
+    <property name="TOTAL_SIZE_CAP" value="5GB"/>
+    <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %p (%file:%line\)- %m%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="FREEMUD_DEV_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${PROJECT_NAME}/freemud_api_${PROJECT_NAME}-dev.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${PROJECT_NAME}/freemud_api_${PROJECT_NAME}-dev-%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>${DISCARDING_THRESHOLD}</discardingThreshold>
+        <queueSize>${EVENT_QUEUE_SIZE}</queueSize>
+        <appender-ref ref="STDOUT"/>
+    </appender>
+
+    <appender name="FREEMUD_DEV_INFO_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>${DISCARDING_THRESHOLD}</discardingThreshold>
+        <queueSize>${EVENT_QUEUE_SIZE}</queueSize>
+        <appender-ref ref="FREEMUD_DEV_INFO"/>
+    </appender>
+
+    <logger name="org.apache.skywalking.apm.webapp" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT_ASYNC"/>
+    </logger>
+
+    <!--<include resource="org/springframework/boot/logging/logback/defaults.xml"/>-->
+    <!--<include resource="org/springframework/boot/logging/logback/file-appender.xml"/>-->
     <root level="INFO">
-        <appender-ref ref="FILE" />
+        <!--<appender-ref ref="FILE"/>-->
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

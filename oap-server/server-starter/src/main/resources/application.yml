@@ -60,7 +60,7 @@ core:
 storage:
   elasticsearch:
     nameSpace: ${SW_NAMESPACE:""}
-    clusterNodes: ${SW_STORAGE_ES_CLUSTER_NODES:localhost:9200}
+    clusterNodes: ${SW_STORAGE_ES_CLUSTER_NODES:111.231.12.200:9126}
     user: ${SW_ES_USER:""}
     password: ${SW_ES_PASSWORD:""}
     indexShardsNumber: ${SW_STORAGE_ES_INDEX_SHARDS_NUMBER:2}
